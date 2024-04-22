@@ -30,59 +30,71 @@
 	購買數量:<input type="number" name="number03"><br>
 </form>
 
-<button onclick="shoppingInfo()"><h4>結帳</h4></button>
+<button id="checkoutBtn"><h4>結帳</h4></button>
 <div id="demo"></div>
 <script>
-    var text="<h4>您的購物資訊如下:</h4>";
-    var fruit = function (fruitType,fruitPrice,no){
-    this.Type = fruitType ;
-    this.Price = fruitPrice ;
-    this.No = no ;
-    this.subTotal = function(no){
-         text+=" 水果種類: " + this.Type+";共" + this.No +"單位<br>";
-         text+=" 價格小計: " + this.Price * this.No + "元<br>";
-    };
-   };
-   var fruit01 = new fruit("愛文芒果(1箱)",475,0);
-   var fruit02 = new fruit("有機木瓜(6台斤)",435,0);
-   var fruit03 = new fruit("黑鑽石桑葚(5台斤)",749,0);
-	function shoppingInfo(){
-	Var x = document.getElementById( "form01" );
-    var item = "" ;
-	var sumToPay = 0 ;
-	var i ;
-	for( i=0 ; i < 5 ; i++ ) {
-		switch (i) {
-			case 0:item="姓名:";break;
-			case 1:item="收件地址:";break;
-			case 2:item="電話:";break;
-			case 3:item="電子郵件:";break;
-			case 4:item="指定收件日期:";break;
-	}
-	text += item + x.elements[i].value + "<br>";
-}
-   for( i = 5 ; i <=9 ; i++ ){
-	if(x.elements[i].checked==true){
-		switch (i) {
-			case 5: fruit01.No = x.elements[i+1].value;
-			 sumToPay += fruit01.Price * fruit01.No;
-			 fruit01.subTotal(fruit01.No);
-		     break;
-			case 7: fruit02.No=x.elements[i+1].value;
-			 sumToPay += fruit02.Price * fruit02.No;
-			 fruit02.subTotal(fruit02.No);
-		     break;
-			case 9: fruit03.No=x.elements[i+1].value;
-			 sumToPay += fruit03.Price * fruit03.No;
-			 fruit03.subTotal(fruit03.No);
-		     break;
-		}
-		}
-		}
+    function fruit(fruitType, fruitPrice) {
+        this.Type = fruitType;
+        this.Price = fruitPrice;
+        this.No = 0;
+        this.subTotal = function() {
+            return this.Price * this.No;
+        }
+    }
 
-		text += "價格合計:" + sumToPay + "元<br>";
+    var fruit01 = new fruit("愛文芒果(1箱)", 475);
+    var fruit02 = new fruit("有機木瓜(6台斤)", 435);
+    var fruit03 = new fruit("黑鑽石桑葚(5台斤)", 749);
+
+    function shoppingInfo() {
+        var text = "<h4>您的購物資訊如下:</h4>";
+        var x = document.getElementById("form01");
+        var sumToPay = 0;
+        var i;
+
+        for (i = 0; i <= 4; i++) {
+            var item = "";
+            switch (i) {
+                case 0: item = "姓名:"; break;
+                case 1: item = "收件地址:"; break;
+                case 2: item = "電話:"; break;
+                case 3: item = "電子郵件:"; break;
+                case 4: item = "指定收件日期:"; break;
+            }
+            text += item + x.elements[i].value + "<br>";
+        }
+
+        for (i = 5; i < 10; i += 2) {
+            if (x.elements[i].checked) {
+                var fruitNo = x.elements[i + 1].value;
+                if (fruitNo > 0) {
+                    switch (i) {
+                        case 5:
+                            fruit01.No = fruitNo;
+                            sumToPay += fruit01.subTotal();
+                            text += `水果種類: ${fruit01.Type}; 共${fruit01.No}單位<br>價格小計: ${fruit01.subTotal()}元<br>`;
+                            break;
+                        case 7:
+                            fruit02.No = fruitNo;
+                            sumToPay += fruit02.subTotal();
+                            text += `水果種類: ${fruit02.Type}; 共${fruit02.No}單位<br>價格小計: ${fruit02.subTotal()}元<br>`;
+                            break;
+                        case 9:
+                            fruit03.No = fruitNo;
+                            sumToPay += fruit03.subTotal();
+                            text += `水果種類: ${fruit03.Type}; 共${fruit03.No}單位<br>價格小計: ${fruit03.subTotal()}元<br>`;
+                            break;
+                    }
+                }
+            }
+        }
+
+        text += `價格合計: ${sumToPay}元<br>`;
         document.getElementById("demo").innerHTML = text;
-}
+    }
+
+    var checkoutBtn = document.getElementById("checkoutBtn");
+    checkoutBtn.addEventListener("click", shoppingInfo);
 </script>
 </body>
 </html>
